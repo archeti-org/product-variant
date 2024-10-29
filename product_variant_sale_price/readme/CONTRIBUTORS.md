@@ -7,3 +7,4 @@
 - Emanuel Cino \<<ecino@compassion.ch>\>
 - Pedroguirao \<<pguirao@puntsistemes.es>\>
 - Gabriel Grinspan \<<gabriel@rooteam.net>\>
+- Alexei Rivera \<<arivera@archeti.com>\>
