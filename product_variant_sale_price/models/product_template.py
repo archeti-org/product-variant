@@ -14,11 +14,26 @@ class ProductTemplate(models.Model):
         return values
 
     def _create_variant_ids(self):
+        # res = super()._create_variant_ids()
+        # for tmpl in self:
+        #     tmpl.product_variant_ids.with_context(skip_update_fix_price=True).write(
+        #         {"fix_price": tmpl.list_price}
+        #     )
+        # return res
+
+        saved_prices = {
+            product.id: product.fix_price
+            for product in self.with_context(active_test=False).product_variant_ids
+            if product.fix_price
+        }
         res = super()._create_variant_ids()
-        for tmpl in self:
-            tmpl.product_variant_ids.with_context(skip_update_fix_price=True).write(
-                {"fix_price": tmpl.list_price}
-            )
+        # restore prices
+        for product in self.product_variant_ids:
+            old_price = saved_prices.get(product.id)
+            if old_price and product.fix_price != old_price:
+                product.with_context(skip_update_fix_price=True).write(
+                    {"fix_price": old_price}
+                )
         return res
 
     def write(self, vals):
